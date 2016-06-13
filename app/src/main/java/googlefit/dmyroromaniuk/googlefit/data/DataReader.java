@@ -43,6 +43,8 @@ public class DataReader {
 
     private DataReader(Context context) {
         mContext = context;
+
+        list = new ArrayList<>();
     }
 
     public static synchronized DataReader getInstance(Context context) {
