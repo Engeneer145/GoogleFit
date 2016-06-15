@@ -72,8 +72,10 @@ public class DataReader {
 
         DataReadResult dataReadResult =
                 Fitness.HistoryApi.readData(mGoogleApiFitnessClient, readRequest).await(1, TimeUnit.MINUTES);
+        Log.e(TAG,dataReadResult.toString());
 
         DataSet stepData = dataReadResult.getDataSet(DataType.TYPE_STEP_COUNT_DELTA);
+        Log.e(TAG,stepData.toString());
 
         for (DataPoint dp : stepData.getDataPoints()) {
             int totalSteps = 0;
@@ -81,6 +83,8 @@ public class DataReader {
             for(Field field : dp.getDataType().getFields()) {
                 int steps = dp.getValue(field).asInt();
                 totalSteps += steps;
+
+                Log.e(TAG,steps+"");
             }
 
             list.add(new DayStats(totalSteps, new Date()));
