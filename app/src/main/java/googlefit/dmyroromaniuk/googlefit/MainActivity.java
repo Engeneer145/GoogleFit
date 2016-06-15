@@ -25,9 +25,10 @@ import googlefit.dmyroromaniuk.googlefit.data.DayStats;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "main_act";
+    private static final String TAG = MainActivity.class.getSimpleName();
+    ;
 
-    private GoogleApiClient mClient = null;
+    private GoogleApiClient mClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             List<DayStats> list = DataReader.getInstance(MainActivity.this).getStepsArray(mClient);
 
-            if (list!=null)
-                for(DayStats day: list) {
-                    Log.e("STEPS", day.getSteps()+"");
+            if (list != null)
+                for (DayStats day : list) {
+                    Log.e("STEPS", day.getSteps() + "");
                 }
 
             return null;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean checkPermissions() {
-        return  true;
+        return true;
     }
 
     private void buildFitnessClient() {

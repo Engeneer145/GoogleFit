@@ -1,16 +1,10 @@
 package googlefit.dmyroromaniuk.googlefit.data;
 
 import android.content.Context;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
@@ -27,29 +21,27 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import googlefit.dmyroromaniuk.googlefit.R;
-
 /**
- * Created by dmyroromaniuk on 13.06.16.
+ * Created by dmyroromaniuk on 15.06.16.
  */
-public class DataReader {
+public class SessionDataReader {
     private static final String TAG = "data";
 
     private List<DayStats> list;
 
     private Context mContext;
 
-    private volatile static DataReader instance;
+    private volatile static SessionDataReader instance;
 
-    private DataReader(Context context) {
+    private SessionDataReader(Context context) {
         mContext = context;
 
         list = new ArrayList<>();
     }
 
-    public static DataReader getInstance(Context context) {
+    public static SessionDataReader getInstance(Context context) {
         if (instance == null)
-            instance = new DataReader(context);
+            instance = new SessionDataReader(context);
 
         return instance;
     }
@@ -65,32 +57,36 @@ public class DataReader {
         cal.set(Calendar.YEAR, 2000);
         long startTime = cal.getTimeInMillis();
 
-        final DataReadRequest readRequest = new DataReadRequest.Builder()
-                .read(DataType.TYPE_STEP_COUNT_DELTA)
-                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+        /*
+        // Build a session read request
+        SessionReadRequest sessionReadRequest = new SessionReadRequest.Builder()
+                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                .read(DataType.TYPE_SPEED)
+                .setSessionName(SAMPLE_SESSION_NAME)
                 .build();
 
+        // Invoke the Sessions API to fetch the session with the query and wait for the result
+        // of the read request. Note: Fitness.SessionsApi.readSession() requires the
+        // ACCESS_FINE_LOCATION permission.
+        SessionReadResult sessionReadResult =
+                Fitness.SessionsApi.readSession(mGoogleApiFitnessClient, sessionReadRequest)
+                        .await(1, TimeUnit.MINUTES);
 
-        DataReadResult dataReadResult =
-                Fitness.HistoryApi.readData(mGoogleApiFitnessClient, readRequest).await(1, TimeUnit.MINUTES);
-        Log.e(TAG, dataReadResult.toString());
+        // Get a list of the sessions that match the criteria to check the result.
+        Log.i(TAG, "Session read was successful. Number of returned sessions is: "
+                + sessionReadResult.getSessions().size());
+        for (Session session : sessionReadResult.getSessions()) {
+            // Process the session
+            dumpSession(session);
 
-        DataSet stepData = dataReadResult.getDataSet(DataType.TYPE_WEIGHT);
-        Log.e(TAG, stepData.toString());
-
-        for (DataPoint dp : stepData.getDataPoints()) {
-            int totalSteps = 0;
-
-            for (Field field : dp.getDataType().getFields()) {
-                int steps = dp.getValue(field).asInt();
-                totalSteps += steps;
-
-                Log.e(TAG, steps + "");
+            // Process the data sets for this session
+            List<DataSet> dataSets = sessionReadResult.getDataSet(session);
+            for (DataSet dataSet : dataSets) {
+                dumpDataSet(dataSet);
             }
-
-            list.add(new DayStats(totalSteps, new Date()));
         }
 
+        */
         return list;
     }
 
